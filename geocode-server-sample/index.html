@@ -6,12 +6,7 @@
 
 <!--
 In this sample, we make the call to GeocodeServer using XMLHttpRequest 
-instead of esri/request and we no longer use dojo. Alter this sample so 
-that it reflects the parameters and return data of NYPD_Composite service.
-
-See Services Directory page for the NYPD_Composite service for a full
-list of required and optional input parameters, and the full list of 
-field values returned for each candidate.
+instead of esri/request and we no longer use dojo. 
 
 The printAddress() and submitAddress() functions below need adjusting so
 that the input parameters can be correctly prepared, and the JSON returned
@@ -19,15 +14,6 @@ by the REST call can be correctly parsed and used.
 
 At the moment the code below is configured to use a different GeocodeServer located here:
 https://sampleserver6.arcgisonline.com/arcgis/rest/services/Locators/SanDiego/GeocodeServer
-
-Instead, *your* REST endpoint URI is:
-https://smdc-egwa01d.nypd.finest/eggc/rest/services/NYPD_Composite/GeocodeServer/findAddressCandidates
--->
-  
-<!-- 
-NYPD service URLs
-https://smdc-egwa01d.nypd.finest/egpt/home
-https://smdc-egwa01d.nypd.finest/eggc/rest 
 -->
 
   <script>
