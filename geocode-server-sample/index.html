@@ -1,0 +1,125 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>REST call to GeocodeService v8</title>
+
+<!--
+In this sample, we make the call to GeocodeServer using XMLHttpRequest 
+instead of esri/request and we no longer use dojo. Alter this sample so 
+that it reflects the parameters and return data of NYPD_Composite service.
+
+See Services Directory page for the NYPD_Composite service for a full
+list of required and optional input parameters, and the full list of 
+field values returned for each candidate.
+
+The printAddress() and submitAddress() functions below need adjusting so
+that the input parameters can be correctly prepared, and the JSON returned
+by the REST call can be correctly parsed and used. 
+
+At the moment the code below is configured to use a different GeocodeServer located here:
+https://sampleserver6.arcgisonline.com/arcgis/rest/services/Locators/SanDiego/GeocodeServer
+
+Instead, *your* REST endpoint URI is:
+https://smdc-egwa01d.nypd.finest/eggc/rest/services/NYPD_Composite/GeocodeServer/findAddressCandidates
+
+<!-- 
+NYPD service URLs
+https://smdc-egwa01d.nypd.finest/egpt/home
+https://smdc-egwa01d.nypd.finest/eggc/rest 
+-->
+
+  <script>
+
+    function printAddress() {
+
+      console.clear();
+
+      var streetinput = document.getElementById("house_street_input").value; 
+      var cityinput = document.getElementById("city_input").value;
+      var stateinput = document.getElementById("state_input").value;
+      var zipinput = document.getElementById("zip_input").value;
+
+      var addressInputs = {
+        Address: streetinput,
+        City: cityinput,
+        Region: stateinput,
+        Postal: zipinput
+      };
+
+      console.log(addressInputs);
+
+      var htmlOutput = "Address: " + addressInputs.Address + " <br>" +
+                       "City: "    + addressInputs.City    + " <br>" +
+                       "State: "   + addressInputs.Region  + " <br>" +
+                       "Zip: "     + addressInputs.Postal;
+
+      document.getElementById("address_output").innerHTML = htmlOutput;
+
+    } // end of function printAddress()
+
+    function submitAddress() {
+
+      console.clear();
+
+      //build URL for rest call with parameters
+      //see comments above for *your* REST endpoint URI
+      var url = "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Locators/SanDiego/GeocodeServer/findAddressCandidates?" +
+          "Address=" + document.getElementById("house_street_input").value +
+          "&City=" + document.getElementById("city_input").value +
+          "&Region=" + document.getElementById("state_input").value +
+          "&Postal=" + document.getElementById("zip_input").value +
+          "&f=json";
+
+      //encode the URI
+      url = encodeURI(url);
+      console.log(url);
+
+      // make HTTP request to the geocode server, return candidates
+      var req = new XMLHttpRequest();
+      req.open('GET', url, true);     
+      req.addEventListener("readystateexchange", processRequest, false);
+      req.send();
+      req.onreadystatechange = processRequest;
+
+      function processRequest(e) {      
+        if (req.readyState == 4 && req.status == 200) {
+          var objReturned = JSON.parse(req.responseText);
+
+          //display SCORE, X, Y onto the page
+          var score = objReturned.candidates[0].score;
+          var lat = objReturned.candidates[0].location.y;
+          var long = objReturned.candidates[0].location.x;
+          var htmlOutput = "Score: " + score + 
+                           "<br> X: " + long + 
+                           "<br> Y: " + lat;
+          document.getElementById("address_output").innerHTML = htmlOutput;
+
+          //display full candidate list in the console
+          console.log(objReturned);
+        }     //end if request results are ready
+      }       //end processRequest() function
+    } //end of function submitAddress
+
+  </script>
+</head>
+
+<body>
+  <div id="address_input">
+    <button>street address</button>
+    <input type="text" id="house_street_input" size="50" value="101 Market St"><p>
+    <button>city</button>    
+    <input type="text" id="city_input" size="30" value="San Diego"><p>
+    <button>state</button>
+    <input type="text" id="state_input" size="10" value="CA"><p>
+    <button>zip</button>
+    <input type="text" id="zip_input" size="20" value="92101"><p>
+    <button onclick="printAddress()" id="btnPrintAddress">print input</button>
+    <button onclick="submitAddress()" id="btnSubmitAddress">submit</button><br>
+  </div>
+  <div id="address_output">
+    <h3>output goes here</h3>
+  </div>  
+</body>
+
+</html>
