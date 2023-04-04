@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ArcGIS REST JS</title>
+    <style>
+      body {font-family: monospace; color: white;}
+      pre {overflow: auto; padding: 1rem;}
+      body,
+      pre {background: #000000;}
+    </style>
+  </head>
+  <body>
+    <pre id="result-add"></pre>
+
+    <script src="https://unpkg.com/@esri/arcgis-rest-request@4.0.0/dist/bundled/request.umd.js"></script>
+    <script src="https://unpkg.com/@esri/arcgis-rest-feature-service@4.0.0/dist/bundled/feature-service.umd.js"></script>
+    <script>
+      const apiKey = "AAPKc9cc2f96619e4fd0a71db1840695d26bkrhUVyQkRAPwLE7fAgR9E1yrk-Ew930SEFSv74C9YnvrGFqW7_-IQZOXt_9vaoxr";
+      const authentication = arcgisRest.ApiKeyManager.fromKey(apiKey);
+      const featureServiceLayerUrl = "https://services9.arcgis.com/hsPsr2XddCBblVhb/arcgis/rest/services/editpoints/FeatureServer/0";
+      const featureToAdd = {
+              attributes: {
+                aCount: 9838,
+                aName: "restjs test"
+              },
+              geometry: {
+                x: -98,
+                y: 38,
+                spatialReference: {wkid: 4326}
+              }
+            };
+
+      // begin by adding a new feature to the feature service layer,
+      // then update its attributes,
+      // and finally delete it from the layer
+      arcgisRest
+        .addFeatures({
+           url: featureServiceLayerUrl,
+           features: [featureToAdd],
+           authentication
+         })
+        .then(handleAdded);
+
+      function handleAdded(response) {
+        if (!response.addResults[0].success) {
+          // stop early if adding a new feature was not successful
+          return;
+        }
+        // else it succeeded; draw results to page
+        console.log(response);
+        formattedResult = "SUCCESS! \n \n" + JSON.stringify(response, null, 2)
+        document.getElementById("result-add").textContent = formattedResult;
+      }
+
+    </script>
+  </body>
+</html>

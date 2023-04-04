@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>ApplyEdits REST with Fetch()</title>
+    <style>
+      body {font-family: monospace; color: white;}
+      pre {overflow: auto; padding: 1rem;}
+      body,
+      pre {background: #000000;}
+    </style>
+  </head>
+  <body>
+    <pre id="result"></pre>
+
+    <script>
+      // async function so that we can use "await"
+      async function applyEditsAdds(restUrl, restFetchOptions) {
+        // use "fetch()" to make the REST call
+        var response = await fetch(restUrl, restFetchOptions);
+        var jsonData = await response.json();
+        // nicely format and draw the result to the page
+        document.getElementById("result").textContent = JSON.stringify(jsonData, null, 2);
+      }	  	
+
+      var url = "https://services9.arcgis.com/hsPsr2XddCBblVhb/arcgis/rest/services/editpoints/FeatureServer/0/applyEdits";
+      var urlencoded = new URLSearchParams();
+        urlencoded.append("adds", "[{geometry:{x:-100,y:40,spatialReference:{wkid:4326}},attributes:{aCount:0,aName:'alpha'}}]");
+        urlencoded.append("f", "pjson");
+        urlencoded.append("token", "your_token_or_apikey_goes_here");
+
+      var options = {
+        method: 'POST',
+        body: urlencoded
+      };
+
+      // call the async function to make the REST request
+      applyEditsAdds(url, options);
+
+    </script>  
+  </body>
+</html>
