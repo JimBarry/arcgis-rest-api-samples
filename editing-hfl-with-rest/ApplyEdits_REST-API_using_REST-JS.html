@@ -20,20 +20,11 @@
       const authentication = arcgisRest.ApiKeyManager.fromKey(apiKey);
       const featureServiceLayerUrl = "https://services9.arcgis.com/hsPsr2XddCBblVhb/arcgis/rest/services/editpoints/FeatureServer/0";
       const featureToAdd = {
-              attributes: {
-                aCount: 1234,
-                aName: "bravo"
-              },
-              geometry: {
-                x: -98,
-                y: 38,
-                spatialReference: {wkid: 4326}
-              }
+              attributes: {aCount: 1234, aName: "bravo"},
+              geometry: {x: -98, y: 38, z: 0, m: 0, spatialReference: {wkid: 4326}}
             };
 
-      // begin by adding a new feature to the feature service layer,
-      // then update its attributes,
-      // and finally delete it from the layer
+      // add a new feature to the feature service layer,
       arcgisRest
         .addFeatures({
            url: featureServiceLayerUrl,
